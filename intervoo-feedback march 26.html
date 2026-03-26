@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intervoo — Onboarding Review</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0d0d0d;
+    --paper: #f5f3ef;
+    --orange: #e8780a;
+    --orange-light: #fff3e0;
+    --red: #c0392b;
+    --red-light: #fdf0ef;
+    --green: #1a6b3c;
+    --green-light: #edf7f1;
+    --muted: #6b6760;
+    --rule: #ddd9d2;
+    --card: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* ── COVER ── */
+  .cover {
+    min-height: 100vh;
+    background: var(--ink);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 64px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -120px; right: -120px;
+    width: 500px; height: 500px;
+    background: var(--orange);
+    border-radius: 50%;
+    opacity: 0.08;
+  }
+
+  .cover-logo {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    letter-spacing: 0.02em;
+    opacity: 0.9;
+  }
+
+  .cover-body { max-width: 700px; }
+
+  .cover-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 24px;
+  }
+
+  .cover-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(52px, 7vw, 88px);
+    line-height: 1.0;
+    font-weight: 400;
+    margin-bottom: 32px;
+  }
+
+  .cover-title em {
+    font-style: italic;
+    color: var(--orange);
+  }
+
+  .cover-desc {
+    font-size: 17px;
+    color: rgba(255,255,255,0.6);
+    max-width: 480px;
+    line-height: 1.7;
+  }
+
+  .cover-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-top: 1px solid rgba(255,255,255,0.12);
+    padding-top: 32px;
+    color: rgba(255,255,255,0.4);
+    font-size: 13px;
+  }
+
+  .cover-meta { display: flex; gap: 48px; }
+  .cover-meta div span { display: block; }
+  .cover-meta div span:first-child { color: rgba(255,255,255,0.3); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
+  .cover-meta div span:last-child { color: rgba(255,255,255,0.8); font-size: 14px; }
+
+  /* ── LAYOUT ── */
+  .page { max-width: 960px; margin: 0 auto; padding: 80px 40px; }
+
+  .section { margin-bottom: 80px; }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: clamp(32px, 4vw, 48px);
+    line-height: 1.1;
+    font-weight: 400;
+    margin-bottom: 24px;
+  }
+
+  .section-intro {
+    font-size: 17px;
+    color: var(--muted);
+    max-width: 640px;
+    line-height: 1.8;
+    margin-bottom: 48px;
+  }
+
+  hr.rule {
+    border: none;
+    border-top: 1px solid var(--rule);
+    margin: 80px 0;
+  }
+
+  /* ── SUMMARY STATS ── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    margin-bottom: 48px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .stat-card {
+    background: var(--card);
+    padding: 32px 28px;
+  }
+
+  .stat-number {
+    font-family: 'Instrument Serif', serif;
+    font-size: 52px;
+    line-height: 1;
+    margin-bottom: 8px;
+    color: var(--ink);
+  }
+
+  .stat-number.red { color: var(--red); }
+  .stat-number.orange { color: var(--orange); }
+  .stat-number.green { color: var(--green); }
+
+  .stat-label {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* ── PROBLEM CARDS ── */
+  .problem-list { display: flex; flex-direction: column; gap: 24px; }
+
+  .problem-card {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 6px 1fr;
+  }
+
+  .problem-card .accent { background: var(--red); }
+  .problem-card.warning .accent { background: var(--orange); }
+  .problem-card.insight .accent { background: var(--green); }
+
+  .problem-body { padding: 28px 32px; }
+
+  .problem-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    background: var(--red-light);
+    color: var(--red);
+  }
+
+  .problem-card.warning .problem-tag { background: var(--orange-light); color: var(--orange); }
+  .problem-card.insight .problem-tag { background: var(--green-light); color: var(--green); }
+
+  .problem-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
+    font-weight: 400;
+    margin-bottom: 10px;
+    line-height: 1.3;
+  }
+
+  .problem-desc {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+    max-width: 640px;
+  }
+
+  .problem-quote {
+    margin-top: 16px;
+    padding: 14px 18px;
+    background: var(--red-light);
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--red);
+    font-style: italic;
+    line-height: 1.6;
+  }
+
+  .problem-card.warning .problem-quote { background: var(--orange-light); color: #7a4000; }
+  .problem-card.insight .problem-quote { background: var(--green-light); color: var(--green); font-style: normal; }
+
+  /* ── FLOW ── */
+  .flow { display: flex; flex-direction: column; gap: 0; position: relative; }
+
+  .flow::before {
+    content: '';
+    position: absolute;
+    left: 24px; top: 48px; bottom: 48px;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--orange), var(--rule));
+  }
+
+  .flow-step {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 24px;
+    align-items: flex-start;
+    padding: 0 0 40px 0;
+    position: relative;
+  }
+
+  .flow-number {
+    width: 48px; height: 48px;
+    background: var(--ink);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Instrument Serif', serif;
+    font-size: 20px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .flow-number.key { background: var(--orange); }
+
+  .flow-content {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-top: 4px;
+  }
+
+  .flow-content h3 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 20px;
+    font-weight: 400;
+    margin-bottom: 8px;
+  }
+
+  .flow-content p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .flow-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: var(--orange-light);
+    color: var(--orange);
+    margin-bottom: 10px;
+  }
+
+  /* ── COMPETITOR ── */
+  .competitor-card {
+    background: var(--ink);
+    color: white;
+    border-radius: 16px;
+    padding: 40px 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: center;
+    margin-bottom: 48px;
+  }
+
+  .competitor-card h3 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 28px;
+    font-weight: 400;
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+
+  .competitor-card p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.7;
+  }
+
+  .vs-badge {
+    display: inline-block;
+    padding: 6px 14px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 6px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 16px;
+    letter-spacing: 0.1em;
+  }
+
+  .differentiator {
+    background: rgba(232, 120, 10, 0.15);
+    border: 1px solid rgba(232, 120, 10, 0.3);
+    border-radius: 10px;
+    padding: 20px 24px;
+  }
+
+  .differentiator p {
+    color: #ffb347 !important;
+    font-size: 15px !important;
+    font-style: italic;
+  }
+
+  /* ── RECOMMENDATIONS ── */
+  .reco-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .reco-card {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    padding: 28px;
+  }
+
+  .reco-icon {
+    font-size: 28px;
+    margin-bottom: 12px;
+  }
+
+  .reco-card h4 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 18px;
+    font-weight: 400;
+    margin-bottom: 8px;
+  }
+
+  .reco-card p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .priority-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+  }
+
+  .p1 { background: var(--red-light); color: var(--red); }
+  .p2 { background: var(--orange-light); color: var(--orange); }
+  .p3 { background: #e8f0fe; color: #1a56db; }
+
+  /* ── MOBILE NOTE ── */
+  .mobile-callout {
+    background: linear-gradient(135deg, #0d0d0d 0%, #1a1a2e 100%);
+    color: white;
+    border-radius: 16px;
+    padding: 40px 48px;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 40px;
+    align-items: center;
+  }
+
+  .mobile-callout .big-text {
+    font-family: 'Instrument Serif', serif;
+    font-size: 56px;
+    line-height: 1;
+    color: var(--orange);
+  }
+
+  .mobile-callout h3 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 24px;
+    font-weight: 400;
+    margin-bottom: 12px;
+  }
+
+  .mobile-callout p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.7;
+  }
+
+  /* ── FOOTER ── */
+  .doc-footer {
+    background: var(--ink);
+    color: rgba(255,255,255,0.4);
+    padding: 40px 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+  }
+
+  .doc-footer strong { color: rgba(255,255,255,0.8); }
+
+  @media (max-width: 700px) {
+    .cover { padding: 40px 28px; }
+    .page { padding: 48px 24px; }
+    .stats-grid { grid-template-columns: 1fr; }
+    .reco-grid { grid-template-columns: 1fr; }
+    .competitor-card { grid-template-columns: 1fr; gap: 24px; }
+    .mobile-callout { grid-template-columns: 1fr; gap: 16px; }
+    .cover-meta { gap: 24px; }
+    .doc-footer { flex-direction: column; gap: 12px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-logo">intervoo</div>
+
+  <div class="cover-body">
+    <div class="cover-label">Product Feedback · Onboarding Review</div>
+    <h1 class="cover-title">The first<br><em>60 seconds</em><br>can be better.</h1>
+    <p class="cover-desc">A review of Intervoo's new user onboarding flow — what's working, what could be stronger, and a proposed path forward that turns more visitors into committed users.</p>
+  </div>
+
+  <div class="cover-footer">
+    <div class="cover-meta">
+      <div>
+        <span>Prepared by</span>
+        <span>Raoul Kahn</span>
+      </div>
+      <div>
+        <span>Date</span>
+        <span>March 2026</span>
+      </div>
+      <div>
+        <span>Status</span>
+        <span>For CEO Review</span>
+      </div>
+    </div>
+    <div>Confidential</div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="page">
+
+  <!-- EXEC SUMMARY -->
+  <div class="section">
+    <div class="section-label">Executive Summary</div>
+    <h2 class="section-title">Three opportunities.<br>One clear direction.</h2>
+    <p class="section-intro">Intervoo has a strong product — and the new onboarding is already an improvement on what came before. There are a few key moments where small, targeted changes could meaningfully improve how new users experience it for the first time.</p>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number red">3</div>
+        <div class="stat-label">Key areas identified for improvement in the current onboarding flow</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number orange">80%</div>
+        <div class="stat-label">More relevant questions when a user uploads their resume — never communicated to users</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number green">4</div>
+        <div class="stat-label">Proposed onboarding steps that eliminate all three problems</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="rule">
+
+  <!-- PROBLEMS -->
+  <div class="section">
+    <div class="section-label">Current State</div>
+    <h2 class="section-title">Where we can improve.</h2>
+    <p class="section-intro">These observations came from going through the onboarding as a real new user — no internal context, no prior knowledge of the product. The intent is constructive.</p>
+
+    <div class="problem-list">
+
+      <div class="problem-card">
+        <div class="accent"></div>
+        <div class="problem-body">
+          <div class="problem-tag">Opportunity — Expectation Setting</div>
+          <div class="problem-title">The homepage imagery creates a video expectation the product doesn't yet deliver.</div>
+          <p class="problem-desc">The hero section shows two people on a video call with the CTA "Try your first interview free." New users — reasonably — arrive expecting a video experience. When they land in a text-based coaching session instead, there's a moment of confusion before they understand the value. This is an easy fix with a meaningful impact on first impressions.</p>
+          <div class="problem-quote">"I thought my first free interview was going to be video, not non-video."</div>
+        </div>
+      </div>
+
+      <div class="problem-card">
+        <div class="accent"></div>
+        <div class="problem-body">
+          <div class="problem-tag">Opportunity — Hidden Value</div>
+          <div class="problem-title">The resume upload's impact is never communicated to the user.</div>
+          <p class="problem-desc">Users can start a mock interview without uploading a resume — and many will, because there's no reason given not to. The experience without a resume is significantly less personalised. The product has an 80% improvement stat that's never shown to the user. Surfacing this at the right moment could be the single highest-leverage change in the entire onboarding flow.</p>
+          <div class="problem-quote">Users who skip the resume upload may blame the product for generic questions — not their own decision to skip.</div>
+        </div>
+      </div>
+
+      <div class="problem-card warning">
+        <div class="accent"></div>
+        <div class="problem-body">
+          <div class="problem-tag">Warning — Orientation</div>
+          <div class="problem-title">Users don't know which mode is right for them.</div>
+          <p class="problem-desc">Intervoo has at least four distinct modes: spoken practice, text coaching, video mock interview, and Live Copilot. These serve very different use cases and user states. Right now there's no guidance about which to choose or when. A user preparing for a phone screen tomorrow needs something very different from someone building skills over three weeks.</p>
+          <div class="problem-quote">The product forces users to make a decision they don't have enough context to make.</div>
+        </div>
+      </div>
+
+      <div class="problem-card warning">
+        <div class="accent"></div>
+        <div class="problem-body">
+          <div class="problem-tag">Bug — Field Mapping</div>
+          <div class="problem-title">The welcome email and app screen greet the user with their job role, not their name.</div>
+          <p class="problem-desc">After completing onboarding, both the app and the welcome email greet the user with their job role title instead of their name — "Product, your starting point is here." This appears to be a field mapping bug where the role is being substituted for the name. It's a small technical fix but the timing makes it impactful — it's the user's very first personalised touchpoint, and it's incorrect.</p>
+          <div class="problem-quote">"Product, your starting point is here." — actual welcome email received after sign-up</div>
+        </div>
+      </div>
+
+      <div class="problem-card warning">
+        <div class="accent"></div>
+        <div class="problem-body">
+          <div class="problem-tag">Warning — Fabricated Insight</div>
+          <div class="problem-title">The score screen claims a "weakest dimension" before the user has done anything.</div>
+          <p class="problem-desc">The post-signup screen shows "Your weakest dimension is Structure" with a score of 0/850. The user hasn't answered a single question. This data is fabricated — and users who notice will immediately distrust the product's other scores and insights. Personalization that isn't real is worse than no personalization at all.</p>
+          <div class="problem-quote">Never show a personalised insight unless it's earned through real data.</div>
+        </div>
+      </div>
+
+      <div class="problem-card insight">
+        <div class="accent"></div>
+        <div class="problem-body">
+          <div class="problem-tag">Insight — What's Working</div>
+          <div class="problem-title">The new onboarding flow is better than it was — the bones are right.</div>
+          <p class="problem-desc">The step-by-step structure, the role selection, and the question generation are solid foundations. The product genuinely works well once users get past onboarding. The goal isn't to rebuild from scratch — it's to fix the critical first-impression moments so users arrive with the right expectations and the right setup to have a great first session.</p>
+          <div class="problem-quote">The product deserves better onboarding. The improvements are targeted and achievable.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <hr class="rule">
+
+  <!-- COMPETITOR -->
+  <div class="section">
+    <div class="section-label">Competitive Context</div>
+    <h2 class="section-title">The landscape has shifted.</h2>
+    <p class="section-intro">Users arriving at Intervoo are likely already aware of Final Round AI and similar tools. Understanding how they position themselves clarifies how Intervoo should differentiate.</p>
+
+    <div class="competitor-card">
+      <div>
+        <div class="vs-badge">COMPETITOR · FINAL ROUND AI</div>
+        <h3>"Crack every interview with Real-Time AI Assistant"</h3>
+        <p>Final Round AI's pitch is explicit: instant, undetectable answers during live interviews — "completely invisible to interviewers." They've built their entire brand around the shortcut. It's gaining traction, especially with users who are desperate.</p>
+      </div>
+      <div>
+        <div class="vs-badge">INTERVOO'S OPPORTUNITY</div>
+        <div class="differentiator">
+          <p>"Practice until you don't need a cheat sheet."</p>
+        </div>
+        <br>
+        <p style="color:rgba(255,255,255,0.6); font-size:14px; line-height:1.7;">Final Round sells a shortcut. Intervoo sells genuine readiness. These are completely different value propositions. Intervoo's user is arguably more valuable — they have integrity, want real improvement, and will stick around because skill-building is ongoing. Intervoo should lean into this contrast, not compete on AI answer speed.</p>
+      </div>
+    </div>
+
+    <div class="problem-card insight" style="margin-top:0">
+      <div class="accent"></div>
+      <div class="problem-body">
+        <div class="problem-tag">Strategic Note</div>
+        <div class="problem-title">The Live Copilot feature should be de-emphasised for new users.</div>
+        <p class="problem-desc">Intervoo does have a live AI assistant feature similar to Final Round. Surfacing this prominently during onboarding risks muddying the brand story — "are we the ethical practice app or the cheat tool?" New users should first experience the preparation and coaching side of the product. The Copilot can be discovered later.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="rule">
+
+  <!-- PROPOSED FLOW -->
+  <div class="section">
+    <div class="section-label">Proposed Solution</div>
+    <h2 class="section-title">A new onboarding flow.</h2>
+    <p class="section-intro">The goal is a progressive commitment model — each step gives the user something valuable and earns the right to ask for more. Users make decisions along the way rather than being dropped into a confusing starting state.</p>
+
+    <div class="flow">
+
+      <div class="flow-step">
+        <div class="flow-number">1</div>
+        <div class="flow-content">
+          <div class="flow-badge">Entry Point</div>
+          <h3>Homepage — set honest expectations</h3>
+          <p>Reframe the hero away from video-first. Lead with the outcome: "Practice until the interview feels easy." Show the product's text, spoken, and video modes clearly. The CTA becomes "Start your free practice session" — no "interview" language that implies video.</p>
+        </div>
+      </div>
+
+      <div class="flow-step">
+        <div class="flow-number">2</div>
+        <div class="flow-content">
+          <div class="flow-badge">Sign Up</div>
+          <h3>Quick sign-up — then immediately earn trust</h3>
+          <p>Minimal friction: name, email, password. No resume upload yet — don't ask for too much before the user has seen value. But the next step comes immediately after, before they're dropped into the product.</p>
+        </div>
+      </div>
+
+      <div class="flow-step">
+        <div class="flow-number key">3</div>
+        <div class="flow-content">
+          <div class="flow-badge" style="background:#fff3e0; color:var(--orange);">⭐ Key Moment — Resume Upload</div>
+          <h3>Upload your resume — with a compelling reason</h3>
+          <p>Before the user starts anything, show them exactly why this matters: <em>"Users who upload their resume get questions 80% more tailored to their background."</em> Make upload the obvious choice. Include a clear "skip for now" in smaller text — no walls. Note: signing up is required to upload, but there's no charge yet.</p>
+        </div>
+      </div>
+
+      <div class="flow-step">
+        <div class="flow-number key">4</div>
+        <div class="flow-content">
+          <div class="flow-badge" style="background:#fff3e0; color:var(--orange);">⭐ Key Moment — Question Preview</div>
+          <h3>Preview your personalised questions</h3>
+          <p>Before the user commits to a session, show them 3–5 of the questions that have been generated for their specific role, company, and background. This is the aha moment — <em>"these questions are actually about me."</em> Seeing good questions makes users want to practice. This is the hook the current flow completely skips.</p>
+        </div>
+      </div>
+
+      <div class="flow-step">
+        <div class="flow-number">5</div>
+        <div class="flow-content">
+          <div class="flow-badge">Mode Selection</div>
+          <h3>Choose how you want to practice — with guidance</h3>
+          <p>Present the three modes with context about when each is useful: Text coaching (anytime, anywhere — good for commuting or low-pressure practice), Spoken practice (when you want to work on delivery), Video mock interview (when you're ready to simulate the real thing). Don't make the user guess.</p>
+        </div>
+      </div>
+
+      <div class="flow-step">
+        <div class="flow-number">6</div>
+        <div class="flow-content">
+          <div class="flow-badge">Session</div>
+          <h3>Start the session — no surprises</h3>
+          <p>The user arrives knowing exactly what they signed up for, with their resume uploaded and their questions personalised. The first session experience becomes dramatically better because the setup was done right.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <hr class="rule">
+
+  <!-- RECOMMENDATIONS -->
+  <div class="section">
+    <div class="section-label">Prioritised Recommendations</div>
+    <h2 class="section-title">What to fix, in order.</h2>
+    <p class="section-intro">Not everything needs to happen at once. These are ordered by impact and urgency.</p>
+
+    <div class="reco-grid">
+      <div class="reco-card">
+        <div class="priority-badge p1">P1 — Immediate</div>
+        <div class="reco-icon">🐛</div>
+        <h4>Fix the name/role bug</h4>
+        <p>The "Product, your starting point is set" greeting is a quick fix with outsized first-impression impact. The welcome email also needs to be updated to not just mirror the app screen.</p>
+      </div>
+
+      <div class="reco-card">
+        <div class="priority-badge p1">P1 — Immediate</div>
+        <div class="reco-icon">📄</div>
+        <h4>Add resume upload nudge before first session</h4>
+        <p>Surface the 80% stat. Make upload the obvious path. One screen, one message. This is the single highest-leverage change in the product right now.</p>
+      </div>
+
+      <div class="reco-card">
+        <div class="priority-badge p1">P1 — Immediate</div>
+        <div class="reco-icon">🎯</div>
+        <h4>Remove fabricated "weakest dimension" score</h4>
+        <p>Don't show a personalised insight until there's real data to back it up. Replace with a neutral baseline message: "Complete your first session to see your starting score."</p>
+      </div>
+
+      <div class="reco-card">
+        <div class="priority-badge p2">P2 — Next Sprint</div>
+        <div class="reco-icon">👀</div>
+        <h4>Add question preview before session start</h4>
+        <p>Show 3–5 generated questions before the user commits to a session. This is the product's best sales pitch — let users experience the personalisation before they're in the session.</p>
+      </div>
+
+      <div class="reco-card">
+        <div class="priority-badge p2">P2 — Next Sprint</div>
+        <div class="reco-icon">🏠</div>
+        <h4>Reframe the homepage hero</h4>
+        <p>Remove or contextualise the video-call imagery. Lead with the preparation and skill-building angle, not the mock interview format. Fix the expectation mismatch at the source.</p>
+      </div>
+
+      <div class="reco-card">
+        <div class="priority-badge p3">P3 — Consider</div>
+        <div class="reco-icon">🗺️</div>
+        <h4>Add mode guidance during onboarding</h4>
+        <p>Help users understand the difference between text, spoken, and video practice — and which is right for their situation. A single contextual screen reduces decision paralysis significantly.</p>
+      </div>
+    </div>
+  </div>
+
+  <hr class="rule">
+
+  <!-- MOBILE NOTE -->
+  <div class="section">
+    <div class="section-label">Adjacent Opportunity</div>
+    <h2 class="section-title">Mobile unlocks a new use case.</h2>
+
+    <div class="mobile-callout">
+      <div class="big-text">📱</div>
+      <div>
+        <h3>The user who can't do video right now</h3>
+        <p>A significant portion of users will want to practice during a commute, lunch break, or waiting room — situations where video isn't possible. A mobile web experience focused on text coaching and question review addresses this directly. This isn't a cut-down version of the product; it's a new context where the product is genuinely useful. The onboarding improvements above should be designed with mobile in mind from the start — particularly the question preview and resume upload steps, which translate well to a mobile-first layout.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="doc-footer">
+  <div><strong>Intervoo</strong> — Onboarding Review · March 2026</div>
+  <div>Confidential · For internal use only</div>
+</div>
+
+</body>
+</html>
